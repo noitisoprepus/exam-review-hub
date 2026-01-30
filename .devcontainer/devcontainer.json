@@ -8,15 +8,16 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers-extra/features/pnpm:2": {},
-		"ghcr.io/devcontainers-extra/features/nestjs-cli:2": {}
+		"ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or with the host.
-	"forwardPorts": [3000, 3001, 5432]
+	"forwardPorts": [3000, 3001, 5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "npm install"
+	"postCreateCommand": "pnpm install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
