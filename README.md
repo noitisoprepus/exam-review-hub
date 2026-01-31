@@ -21,7 +21,7 @@ code .
 ```
 
 ### 3. Reopen in Development Container
-- Open the command paletter (Ctrl+Shift+P) and run "Dev Containers: Reopen in Container"
+- Open the command palette (Ctrl+Shift+P) and run "Dev Containers: Reopen in Container"
 
 (The Docker engine should be running for this to work)
 
@@ -30,7 +30,7 @@ code .
 - Subsequent starts: 30-60 seconds
 
 ### 5. Start Development Services
-Once container is ready, start both frontend and backend:
+Once container is ready, you can run the services using:
 ```bash
 pnpm dev
 ```
