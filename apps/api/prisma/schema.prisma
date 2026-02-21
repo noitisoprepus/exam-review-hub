@@ -15,25 +15,30 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  email        String     @unique
-  username     String     @unique
-  passwordHash String
-  firstName    String
-  lastName     String
-  role         UserRole   @default(LEARNER)
-  status       UserStatus @default(ACTIVE)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  lastLoginAt  DateTime?
-  deleted      Boolean    @default(false)
-  deletedAt    DateTime?
-}
+  id                  String              @id @default(uuid())
+  email               String              @unique
+  passwordHash        String
+  passwordChangedAt   DateTime?
+  failedLoginAtempts  Int                 @default(0)
 
-enum UserRole { 
-  LEARNER
-  CREATOR 
-  ADMIN 
+  learnerProfile      LearnerProfile?
+  creatorProfile      CreatorProfile?
+
+  isAdmin             Boolean             @default(false)
+
+  avatarUrl           String?
+
+  countryCode         String?             @db.Char(2) // e.g. "US", "PH", "JP"
+  timezone            String?
+  locale              String?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  emailVerifiedAt     DateTime?
+  lastLoginAt         DateTime?
+  deletedAt           DateTime?
+
+  status              UserStatus          @default(ACTIVE)
 }
 
 enum UserStatus {
@@ -41,4 +46,59 @@ enum UserStatus {
   INACTIVE
   SUSPENDED
   BANNED
+}
+
+model LearnerProfile {
+  id                  String              @id @default(uuid())
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String              @unique
+  
+  displayName         String
+
+  firstName           String?
+  lastName            String?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model CreatorProfile {
+  id                  String              @id @default(uuid())
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String              @unique
+  
+  displayName         String
+
+  // Accounting
+  accountNumber       String?
+  tinNumber           String?             @unique
+  
+  creatorType         CreatorType
+  
+  // Individual-specific fields
+  firstName           String?
+  lastName            String?
+
+  // Organization-specific fields
+  organizationName    String?
+  
+  verificationStatus  VerificationStatus  @default(UNVERIFIED)
+  verifiedAt          DateTime?
+  rejectedReason      String?
+
+  reputationScore     Float               @default(0)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+enum CreatorType {
+  INDIVIDUAL
+  ORGANIZATION
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
 }
