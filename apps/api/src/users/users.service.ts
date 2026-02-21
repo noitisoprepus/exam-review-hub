@@ -10,16 +10,7 @@ export class UsersService {
     return this.prisma.user.findUnique({
       where: {
         id,
-        deleted: false,
-      },
-    });
-  }
-
-  async findByUsername(username: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
-      where: {
-        username,
-        deleted: false,
+        deletedAt: null,
       },
     });
   }
@@ -57,7 +48,6 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: {
-        deleted: true,
         deletedAt: new Date(),
       },
     });
