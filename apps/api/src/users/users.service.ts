@@ -15,6 +15,15 @@ export class UsersService {
     });
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+        deletedAt: null,
+      },
+    });
+  }
+
   async findMany(
     skip?: number,
     take?: number,
