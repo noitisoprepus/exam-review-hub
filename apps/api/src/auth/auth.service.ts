@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
@@ -85,6 +86,44 @@ export class AuthService {
 
   async logoutAll(userId: string): Promise<void> {
     await this.refreshTokenService.revokeAllUserTokens(userId);
+  }
+
+  async refresh(refreshToken: string): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: Omit<User, 'passwordHash'>;
+  }> {
+    const validToken = await this.refreshTokenService.findValid(refreshToken);
+    if (!validToken) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    const user = await this.usersService.findById(validToken.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.status === 'SUSPENDED') {
+      throw new ForbiddenException('Account is suspended');
+    } else if (user.status === 'BANNED') {
+      throw new ForbiddenException('Account is banned');
+    }
+
+    // Revoke old refresh token
+    await this.refreshTokenService.revoke(refreshToken);
+
+    const newAccessToken = this.generateAccessToken(user.id);
+    const newRefreshToken = await this.generateAndStoreRefreshToken(
+      user.id,
+      validToken.userAgent ?? undefined,
+      validToken.ipAddress ?? undefined,
+    );
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+      user: user,
+    };
   }
 
   private generateAccessToken(userId: string): string {
