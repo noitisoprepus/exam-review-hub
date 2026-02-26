@@ -83,6 +83,10 @@ export class AuthService {
     await this.refreshTokenService.revoke(refreshToken);
   }
 
+  async logoutAll(userId: string): Promise<void> {
+    await this.refreshTokenService.revokeAllUserTokens(userId);
+  }
+
   private generateAccessToken(userId: string): string {
     return this.jwtService.sign({ userId }, { expiresIn: ACCESS_TOKEN_EXPIRY });
   }
