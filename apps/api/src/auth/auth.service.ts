@@ -39,6 +39,8 @@ export class AuthService {
   async login(
     email: string,
     password: string,
+    userAgent?: string,
+    ipAddress?: string,
   ): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -64,7 +66,11 @@ export class AuthService {
     }
 
     const accessToken = this.generateAccessToken(user.id);
-    const refreshToken = await this.generateAndStoreRefreshToken(user.id);
+    const refreshToken = await this.generateAndStoreRefreshToken(
+      user.id,
+      userAgent,
+      ipAddress,
+    );
 
     return {
       accessToken: accessToken,
@@ -81,7 +87,11 @@ export class AuthService {
     return this.jwtService.sign({ userId }, { expiresIn: ACCESS_TOKEN_EXPIRY });
   }
 
-  private async generateAndStoreRefreshToken(userId: string): Promise<string> {
+  private async generateAndStoreRefreshToken(
+    userId: string,
+    userAgent?: string,
+    ipAddress?: string,
+  ): Promise<string> {
     const refreshToken = this.jwtService.sign(
       { userId, type: 'refresh' },
       { expiresIn: `${REFRESH_TOKEN_EXPIRY_DAYS}d` },
@@ -90,8 +100,13 @@ export class AuthService {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
 
-    // TODO: Retrieve user agent and IP address
-    await this.refreshTokenService.create(userId, refreshToken, expiresAt);
+    await this.refreshTokenService.create(
+      userId,
+      refreshToken,
+      expiresAt,
+      userAgent,
+      ipAddress,
+    );
 
     return refreshToken;
   }
