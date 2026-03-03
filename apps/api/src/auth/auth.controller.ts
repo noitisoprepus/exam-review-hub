@@ -33,7 +33,6 @@ export class AuthController {
     return await this.authService.login(loginDto.email, loginDto.password);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
