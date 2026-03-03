@@ -135,7 +135,10 @@ export class AuthService {
   }
 
   private generateAccessToken(userId: string): string {
-    return this.jwtService.sign({ userId }, { expiresIn: ACCESS_TOKEN_EXPIRY });
+    return this.jwtService.sign(
+      { sub: userId },
+      { expiresIn: ACCESS_TOKEN_EXPIRY },
+    );
   }
 
   private async generateAndStoreRefreshToken(
@@ -144,7 +147,7 @@ export class AuthService {
     ipAddress?: string,
   ): Promise<string> {
     const refreshToken = this.jwtService.sign(
-      { userId, type: 'refresh' },
+      { sub: userId, type: 'refresh' },
       { expiresIn: `${REFRESH_TOKEN_EXPIRY_DAYS}d` },
     );
 
