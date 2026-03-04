@@ -9,7 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { PasswordService } from './password.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './refresh-token.service';
-import { User } from 'prisma/generated/prisma/client';
+import { User, UserStatus } from 'prisma/generated/prisma/client';
 
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
@@ -74,7 +74,11 @@ export class AuthService {
       throw new ForbiddenException('Account is banned');
     }
 
-    const accessToken = this.generateAccessToken(user.id);
+    const accessToken = this.generateAccessToken(
+      user.id,
+      user.isAdmin,
+      user.status,
+    );
     const refreshToken = await this.generateAndStoreRefreshToken(
       user.id,
       userAgent,
@@ -122,7 +126,11 @@ export class AuthService {
     // Revoke old refresh token
     await this.refreshTokenService.revoke(refreshToken);
 
-    const newAccessToken = this.generateAccessToken(user.id);
+    const newAccessToken = this.generateAccessToken(
+      user.id,
+      user.isAdmin,
+      user.status,
+    );
     const newRefreshToken = await this.generateAndStoreRefreshToken(
       user.id,
       validToken.userAgent ?? undefined,
@@ -138,9 +146,13 @@ export class AuthService {
     };
   }
 
-  private generateAccessToken(userId: string): string {
+  private generateAccessToken(
+    userId: string,
+    isAdmin: boolean,
+    status: UserStatus,
+  ): string {
     return this.jwtService.sign(
-      { sub: userId },
+      { sub: userId, isAdmin, status },
       { expiresIn: ACCESS_TOKEN_EXPIRY },
     );
   }

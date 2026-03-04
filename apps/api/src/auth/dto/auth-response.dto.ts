@@ -1,3 +1,5 @@
+import { UserStatus } from 'prisma/generated/prisma/enums';
+
 export class AuthResponseDto {
   accessToken: string;
   refreshToken: string;
@@ -9,6 +11,6 @@ export class AuthResponseDto {
     role: 'LEARNER' | 'CREATOR';
 
     isAdmin: boolean;
-    status: string;
+    status: UserStatus;
   };
 }
