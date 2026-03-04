@@ -10,6 +10,7 @@ import { PasswordService } from './password.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './refresh-token.service';
 import { User, UserStatus } from 'prisma/generated/prisma/client';
+import { randomBytes } from 'crypto';
 
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
@@ -162,13 +163,10 @@ export class AuthService {
     userAgent?: string,
     ipAddress?: string,
   ): Promise<string> {
-    const refreshToken = this.jwtService.sign(
-      { sub: userId, type: 'refresh' },
-      { expiresIn: `${REFRESH_TOKEN_EXPIRY_DAYS}d` },
-    );
+    // Generate 256-bit random token
+    const refreshToken = randomBytes(32).toString('hex');
 
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
+    const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRY_DAYS);
 
     await this.refreshTokenService.create(
       userId,
