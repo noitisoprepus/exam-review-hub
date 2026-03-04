@@ -9,7 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { PasswordService } from './password.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './refresh-token.service';
-import { User, UserStatus } from 'prisma/generated/prisma/client';
+import { UserStatus } from 'prisma/generated/prisma/client';
 import { randomBytes } from 'crypto';
 
 const ACCESS_TOKEN_EXPIRY = '15m';
@@ -54,7 +54,6 @@ export class AuthService {
   ): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: Omit<User, 'passwordHash'>;
   }> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
@@ -86,12 +85,9 @@ export class AuthService {
       ipAddress,
     );
 
-    const { passwordHash, ...safeUser } = user;
-
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
-      user: safeUser,
     };
   }
 
@@ -106,7 +102,6 @@ export class AuthService {
   async refresh(refreshToken: string): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: Omit<User, 'passwordHash'>;
   }> {
     const validToken = await this.refreshTokenService.findValid(refreshToken);
     if (!validToken) {
@@ -138,12 +133,9 @@ export class AuthService {
       validToken.ipAddress ?? undefined,
     );
 
-    const { passwordHash, ...safeUser } = user;
-
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      user: safeUser,
     };
   }
 
