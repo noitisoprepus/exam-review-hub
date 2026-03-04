@@ -81,10 +81,12 @@ export class AuthService {
       ipAddress,
     );
 
+    const { passwordHash, ...safeUser } = user;
+
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
-      user: user,
+      user: safeUser,
     };
   }
 
@@ -127,10 +129,12 @@ export class AuthService {
       validToken.ipAddress ?? undefined,
     );
 
+    const { passwordHash, ...safeUser } = user;
+
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      user: user,
+      user: safeUser,
     };
   }
 
