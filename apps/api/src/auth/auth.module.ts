@@ -7,19 +7,14 @@ import { JwtStrategy } from './jwt.strategy';
 import { RefreshTokenService } from './refresh-token.service';
 import { PasswordService } from './password.service';
 import { UsersModule } from 'src/users/users.module';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  providers: [
-    AuthService,
-    PasswordService,
-    JwtStrategy,
-    RefreshTokenService,
-    PrismaService,
-  ],
+  providers: [AuthService, PasswordService, JwtStrategy, RefreshTokenService],
   controllers: [AuthController],
   imports: [
     UsersModule,
+    PrismaModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
