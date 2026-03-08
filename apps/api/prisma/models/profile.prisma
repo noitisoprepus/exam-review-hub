@@ -1,0 +1,41 @@
+model UserProfile {
+  id                  String              @id @default(uuid())
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String              @unique
+  
+  displayName         String
+
+  avatarUrl           String?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model CreatorProfile {
+  id                  String              @id @default(uuid())
+
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String              @unique
+
+  creatorType         CreatorType
+  
+  verificationStatus  VerificationStatus  @default(UNVERIFIED)
+  verifiedAt          DateTime?
+  rejectedReason      String?
+
+  reputationScore     Float               @default(0)
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+enum CreatorType {
+  INDIVIDUAL
+  ORGANIZATION
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
+}

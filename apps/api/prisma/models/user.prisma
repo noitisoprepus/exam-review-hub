@@ -1,0 +1,54 @@
+model User {
+  id                  String              @id @default(uuid())
+
+  email               String              @unique
+  passwordHash        String
+  passwordChangedAt   DateTime?
+
+  userProfile         UserProfile?
+  creatorProfile      CreatorProfile?
+
+  isAdmin             Boolean             @default(false)
+
+  countryCode         String?             @db.Char(2) // e.g. "US", "PH", "JP"
+  timezone            String?
+  locale              String?
+
+  failedLoginAtempts  Int                 @default(0)
+  lockedUntil         DateTime?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  emailVerifiedAt     DateTime?
+  lastLoginAt         DateTime?
+  deletedAt           DateTime?
+
+  status              UserStatus          @default(ACTIVE)
+
+  refreshToken        RefreshToken[]
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BANNED
+}
+
+model RefreshToken {
+  id                  String              @id @default(uuid())
+  
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String
+
+  tokenHash           String              @unique
+  expiresAt           DateTime
+
+  createdAt           DateTime            @default(now())
+  revokedAt           DateTime?
+
+  userAgent           String?
+  ipAddress           String?
+
+  @@index([userId])
+}
