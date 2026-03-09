@@ -23,11 +23,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() registerDto: RegisterDto) {
-    await this.authService.register(
-      registerDto.email,
-      registerDto.password,
-      registerDto.role,
-    );
+    await this.authService.register(registerDto.email, registerDto.password);
   }
 
   @Post('login')

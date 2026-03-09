@@ -24,11 +24,7 @@ export class AuthService {
     private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  async register(
-    email: string,
-    password: string,
-    role?: 'LEARNER' | 'CREATOR',
-  ): Promise<void> {
+  async register(email: string, password: string): Promise<void> {
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
       throw new BadRequestException('Email already in use');
@@ -40,10 +36,6 @@ export class AuthService {
       email: email,
       passwordHash: passwordHash,
     });
-
-    if (role) {
-      // TODO: Implement user profile CRUD
-    }
   }
 
   async login(
