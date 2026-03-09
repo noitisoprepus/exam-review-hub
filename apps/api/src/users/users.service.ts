@@ -4,10 +4,10 @@ import { Prisma, User } from 'prisma/generated/prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {}
 
   async findById(id: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    return this.prismaService.user.findUnique({
       where: {
         id,
         deletedAt: null,
@@ -16,7 +16,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    return this.prismaService.user.findUnique({
       where: {
         email,
         deletedAt: null,
@@ -31,7 +31,7 @@ export class UsersService {
     where?: Prisma.UserWhereInput,
     orderBy?: Prisma.UserOrderByWithRelationInput,
   ): Promise<User[]> {
-    return this.prisma.user.findMany({
+    return this.prismaService.user.findMany({
       skip,
       take,
       cursor,
@@ -41,20 +41,18 @@ export class UsersService {
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({
-      data,
-    });
+    return this.prismaService.user.create({ data });
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       where: { id },
       data,
     });
   }
 
   async delete(id: string): Promise<User> {
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       where: { id },
       data: {
         deletedAt: new Date(),
