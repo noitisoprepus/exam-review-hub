@@ -18,6 +18,14 @@ export class ProfilesService {
     });
   }
 
+  async findUserProfileByUsername(
+    username: string,
+  ): Promise<UserProfile | null> {
+    return this.prismaService.userProfile.findUnique({
+      where: { username },
+    });
+  }
+
   async createUserProfile(
     data: Prisma.UserProfileCreateInput,
   ): Promise<UserProfile> {
@@ -25,11 +33,11 @@ export class ProfilesService {
   }
 
   async updateUserProfile(
-    id: string,
+    userId: string,
     data: Prisma.UserProfileUpdateInput,
   ): Promise<UserProfile> {
     return this.prismaService.userProfile.update({
-      where: { id },
+      where: { userId },
       data,
     });
   }
@@ -49,11 +57,11 @@ export class ProfilesService {
   }
 
   async updateCreatorProfile(
-    id: string,
+    userId: string,
     data: Prisma.CreatorProfileUpdateInput,
   ): Promise<CreatorProfile> {
     return this.prismaService.creatorProfile.update({
-      where: { id },
+      where: { userId },
       data,
     });
   }
