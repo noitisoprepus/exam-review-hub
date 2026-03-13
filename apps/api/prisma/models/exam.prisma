@@ -6,46 +6,46 @@ model Question {
   creatorId           String
 
   correctOptionIndex  Int
-  explanation         String?
+  explanation         String
 
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 
   options             QuestionOption[]
   examQuestions       ExamQuestion[]
 }
 
 model QuestionOption {
-  id            String    @id @default(uuid())
-  question      Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId    String
-  optionIndex   Int
-  text          String
+  id                  String              @id @default(uuid())
+  question            Question            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId          String
+  optionIndex         Int
+  text                String
 
   @@unique([questionId, optionIndex])
 }
 
 model Exam {
-  id            String          @id @default(uuid())
-  title         String
-  description   String?
+  id                  String              @id @default(uuid())
+  title               String
+  description         String?
   
-  creator       CreatorProfile  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId     String
+  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId           String
 
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 
-  examQuestions ExamQuestion[]
+  examQuestions       ExamQuestion[]
 }
 
 model ExamQuestion {
-  id          String    @id @default(uuid())
-  exam        Exam      @relation(fields: [examId], references: [id], onDelete: Cascade)
-  examId      String
-  question    Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId  String
-  orderIndex  Int
+  id                  String              @id @default(uuid())
+  exam                Exam                @relation(fields: [examId], references: [id], onDelete: Cascade)
+  examId              String
+  question            Question            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId          String
+  orderIndex          Int
 
   @@unique([examId, questionId])
   @@index([examId, orderIndex])
