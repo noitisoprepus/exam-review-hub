@@ -8,8 +8,12 @@ model Question {
   correctOptionIndex  Int
   explanation         String
 
+  rootId              String?             @db.Uuid
+  version             Int                 @default(1)
+
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
+  deletedAt           DateTime?
 
   options             QuestionOption[]
   examQuestions       ExamQuestion[]
@@ -29,12 +33,16 @@ model Exam {
   id                  String              @id @default(uuid())
   title               String
   description         String?
+
+  rootId              String?             @db.Uuid
+  version             Int                 @default(1)
   
   creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId           String
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
+  deletedAt           DateTime?
 
   examQuestions       ExamQuestion[]
 }
