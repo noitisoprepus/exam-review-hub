@@ -26,6 +26,10 @@ model User {
   status              UserStatus          @default(ACTIVE)
 
   refreshToken        RefreshToken[]
+
+  questions           Question[]
+  exams               Exam[]
+  examAttempts        ExamAttempt[]
 }
 
 enum UserStatus {

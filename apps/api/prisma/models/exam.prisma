@@ -4,7 +4,7 @@ model Question {
   id                  String              @id @default(uuid())
   text                String
   
-  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Restrict)
+  creator             User                @relation(fields: [creatorId], references: [id], onDelete: Restrict)
   creatorId           String
 
   correctOptionIndex  Int
@@ -23,6 +23,8 @@ model Question {
   examQuestions       ExamQuestion[]
 
   questionTags        QuestionTag[]
+
+  userAnswers         UserAnswer[]
 }
 
 model QuestionOption {
@@ -71,14 +73,17 @@ model Exam {
   groupId             String?
   version             Int                 @default(1)
   
-  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Restrict)
+  creator             User                @relation(fields: [creatorId], references: [id], onDelete: Restrict)
   creatorId           String
 
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
+  publishedAt         DateTime?
   deletedAt           DateTime?
 
   examQuestions       ExamQuestion[]
+
+  examAttempts        ExamAttempt[]
 }
 
 model ExamQuestion {
@@ -99,4 +104,40 @@ model TargetExam {
   slug                String              @unique   // "upcat", "cse"
 
   exams               Exam[]
+}
+
+// Exam Attempts
+
+model ExamAttempt {
+  id                  String              @id @default(uuid())
+
+  user                User                @relation(fields: [userId], references: [id], onDelete: Restrict)
+  userId              String
+
+  exam                Exam                @relation(fields: [examId], references: [id], onDelete: Restrict)
+  examId              String
+  examVersion         Int
+
+  score               Float?
+  startedAt           DateTime            @default(now())
+  submittedAt         DateTime?
+
+  answers             UserAnswer[]
+}
+
+model UserAnswer {
+  id                  String              @id @default(uuid())
+
+  attempt             ExamAttempt         @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  attemptId           String
+
+  question            Question            @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  questionId          String
+
+  selectedIndex       Int?
+  isCorrect           Boolean?
+
+  answeredAt          DateTime            @default(now())
+
+  @@unique([attemptId, questionId])
 }
