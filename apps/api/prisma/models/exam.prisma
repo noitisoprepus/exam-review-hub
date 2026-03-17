@@ -8,7 +8,7 @@ model Question {
   correctOptionIndex  Int
   explanation         String
 
-  rootId              String?             @db.Uuid
+  groupId             String?
   version             Int                 @default(1)
 
   createdAt           DateTime            @default(now())
@@ -34,7 +34,7 @@ model Exam {
   title               String
   description         String?
 
-  rootId              String?             @db.Uuid
+  groupId             String?
   version             Int                 @default(1)
   
   creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
