@@ -1,12 +1,16 @@
+// Question
+
 model Question {
   id                  String              @id @default(uuid())
   text                String
   
-  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Restrict)
   creatorId           String
 
   correctOptionIndex  Int
   explanation         String
+
+  difficulty          QuestionDifficulty
 
   groupId             String?
   version             Int                 @default(1)
@@ -17,6 +21,8 @@ model Question {
 
   options             QuestionOption[]
   examQuestions       ExamQuestion[]
+
+  questionTags        QuestionTag[]
 }
 
 model QuestionOption {
@@ -29,15 +35,43 @@ model QuestionOption {
   @@unique([questionId, optionIndex])
 }
 
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Tag {
+  id                  String              @id @default(uuid())
+  name                String              @unique
+
+  questions           QuestionTag[]
+}
+
+model QuestionTag {
+  id                  String              @id @default(uuid())
+  tag                 Tag                 @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId               String
+  question            Question            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId          String
+
+  @@unique([questionId, tagId])
+}
+
+// Exam
+
 model Exam {
   id                  String              @id @default(uuid())
   title               String
   description         String?
 
+  targetExam          TargetExam          @relation(fields: [targetExamId], references: [id], onDelete: Restrict)
+  targetExamId        String
+
   groupId             String?
   version             Int                 @default(1)
   
-  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator             CreatorProfile      @relation(fields: [creatorId], references: [id], onDelete: Restrict)
   creatorId           String
 
   createdAt           DateTime            @default(now())
@@ -57,4 +91,12 @@ model ExamQuestion {
 
   @@unique([examId, questionId])
   @@index([examId, orderIndex])
+}
+
+model TargetExam {
+  id                  String              @id @default(uuid())
+  name                String              @unique   // "UPCAT", "Civil Service Exam"
+  slug                String              @unique   // "upcat", "cse"
+
+  exams               Exam[]
 }
