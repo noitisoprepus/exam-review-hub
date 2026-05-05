@@ -3,9 +3,9 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { Question, QuestionOption } from 'prisma/generated/prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { QuestionDifficulty } from 'prisma/generated/prisma/enums';
+import { Question, QuestionOption } from '../../prisma/generated/prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
+import { QuestionDifficulty } from '../../prisma/generated/prisma/enums';
 
 type QuestionWithOptions = Question & { options: QuestionOption[] };
 

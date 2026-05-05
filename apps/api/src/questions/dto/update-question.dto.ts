@@ -10,7 +10,7 @@ import {
   Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { QuestionDifficulty } from 'prisma/generated/prisma/enums';
+import { QuestionDifficulty } from '../../../prisma/generated/prisma/enums';
 
 export class QuestionOptionDto {
   @ApiProperty({ example: 0 })
