@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { CreatorType } from 'prisma/generated/prisma/client';
-
+import { CreatorType } from '../../../prisma/generated/prisma/enums';
+// import { CreatorType } from '../../prisma/generated/prisma/client';
 export class CreateCreatorProfileDto {
   @ApiProperty({ enum: CreatorType, example: 'INDIVIDUAL' })
   @IsEnum(CreatorType)

@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import type { JwtDto } from 'src/auth/dto/jwt.dto';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import type { JwtDto } from '@/auth/dto/jwt.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { CreateCreatorProfileDto } from './dto/create-creator-profile.dto';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';

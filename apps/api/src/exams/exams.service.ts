@@ -8,8 +8,8 @@ import {
   ExamQuestion,
   Question,
   QuestionOption,
-} from 'prisma/generated/prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+} from '../../prisma/generated/prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
 
 type QuestionWithOptions = Question & { options: QuestionOption[] };
 type ExamWithQuestions = Exam & {

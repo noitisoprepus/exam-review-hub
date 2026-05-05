@@ -1,4 +1,4 @@
-import { UserStatus } from 'prisma/generated/prisma/enums';
+import { UserStatus } from '../../../prisma/generated/prisma/enums';
 
 export interface JwtDto {
   /**

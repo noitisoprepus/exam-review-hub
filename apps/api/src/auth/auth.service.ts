@@ -5,11 +5,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '@/users/users.service';
 import { PasswordService } from './password.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './refresh-token.service';
-import { UserStatus } from 'prisma/generated/prisma/client';
+import { UserStatus } from '../../prisma/generated/prisma/client';
 import { randomBytes } from 'crypto';
 
 const ACCESS_TOKEN_EXPIRY = '15m';

@@ -6,8 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { RefreshTokenService } from './refresh-token.service';
 import { PasswordService } from './password.service';
-import { UsersModule } from 'src/users/users.module';
-import { PrismaModule } from 'src/prisma/prisma.module';
+import { UsersModule } from '@/users/users.module';
+import { PrismaModule } from '@/prisma/prisma.module';
 
 @Module({
   providers: [AuthService, PasswordService, JwtStrategy, RefreshTokenService],

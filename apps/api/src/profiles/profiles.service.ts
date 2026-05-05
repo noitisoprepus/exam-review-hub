@@ -3,8 +3,8 @@ import {
   CreatorProfile,
   Prisma,
   UserProfile,
-} from 'prisma/generated/prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+} from '../../prisma/generated/prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class ProfilesService {

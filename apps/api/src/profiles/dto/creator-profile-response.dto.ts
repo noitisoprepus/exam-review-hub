@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   CreatorType,
   VerificationStatus,
-} from 'prisma/generated/prisma/client';
+} from '../../../prisma/generated/prisma/enums';
 
 export class CreatorProfileResponseDto {
   @ApiProperty()
